@@ -50,7 +50,7 @@ app.use("/avatars", avatars);
 app.get("/", (req, res) => {
   let user;
   if (req.user) user = req.user;
-  res.send({ message: "Welcome", user, status: 200 });
+  res.send({ message: "Hello World", user, status: 200 });
 });
 
 const port = process.env.PORT || 8080;

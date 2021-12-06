@@ -17,7 +17,8 @@
     "TODO App",
     "To Do",
     "To Do App",
-    "Electron"
+    "TODO Backend",
+    "To Do Backend"
   ],
   "dependencies": {
     "bcrypt": "^5.0.1",
