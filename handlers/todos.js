@@ -17,7 +17,7 @@ router.use(async (req, res, next) => {
   next();
 });
 
-router.post("/create", async (req, res) => {
+router.post("/", async (req, res) => {
   let { title, description, endDate, category } = req.body;
   if (!title || !endDate) {
     res.status(404);
@@ -37,9 +37,9 @@ router.post("/create", async (req, res) => {
 router.post("/edit", async (req, res) => {
   let { title, description, endDate, category, item_id, done } = req.body;
 
-  if (!item_id) {
-    res.status(404);
-    res.send({ message: "item_id is required", status: 404 });
+  if (!item_id || typeof done != 'boolean' || typeof endDate != 'number') {
+    res.status(400);
+    res.send({ message: "item_id is required or data types are invalid", status: 400 });
     return;
   }
   let array = req.db_user.todos;
@@ -66,11 +66,11 @@ router.post("/edit", async (req, res) => {
   res.send({ message: "OK" });
 });
 
-router.delete("/delete", async (req, res) => {
+router.delete("/", async (req, res) => {
   let id = req.body.item_id;
   if (!id) {
-    res.status(404);
-    res.send({ message: "item_id is required", status: 404 });
+    res.status(400);
+    res.send({ message: "item_id is required", status: 400 });
     return;
   }
 
@@ -89,7 +89,7 @@ router.delete("/delete", async (req, res) => {
   res.send({ message: "OK", status: 200 });
 });
 
-router.get("/list", async (req, res) => {
+router.get("/", async (req, res) => {
   res.status(200);
   res.send({ message: "OK", list: JSON.stringify(req.db_user.todos) });
 });

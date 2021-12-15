@@ -29,8 +29,8 @@ router.post("/register", async (req, res) => {
     valid = false;
   }
 
-  const encoded_password = bcrypt.hashSync(unencoded_password, salt);
   if (valid) {
+    const encoded_password = bcrypt.hashSync(unencoded_password, salt);
     newUser = new User({
       login: login,
       password: encoded_password,
@@ -39,8 +39,11 @@ router.post("/register", async (req, res) => {
       mail: email,
     });
     newUser.save();
+    res.send({ message: "OK", is_valid: valid, status: 200 });
   }
-  res.send({ message: "OK", is_valid: valid, status: 200 });
+  else {
+    res.send({ message: "BAD REQUEST", is_valid: valid, status: 400 });
+  }
 });
 
 router.post("/login", async (req, res) => {
@@ -49,7 +52,7 @@ router.post("/login", async (req, res) => {
 
   if (!login || !password) {
     res.status(400);
-    res.send({ is_valid: false, status: 400 });
+    res.send({ is_valid: false, status: 400, message: "BAD REQUEST" });
     return;
   }
 
