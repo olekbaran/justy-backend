@@ -10,40 +10,48 @@ router.post("/register", async (req, res) => {
   const unencoded_password = req.body.password;
   const name = req.body.name;
   const email = req.body.email;
-  let valid = true;
 
   if (!login || !unencoded_password || !name || !email) {
     res.status(400);
-    res.send({ is_valid: false, status: 400 });
+    res.send({ message: "Not enough data" });
     return;
   }
 
   if (!email.match(/[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+/)) {
     res.status(400);
-    res.send({ is_valid: false, status: 400 });
+    res.send({ message: "Email invalid" });
     return;
+  }
+  const password_length = unencoded_password.length;
+  if( password_length < 8 ){
+    res.status(400);
+    res.send({ message: "Password too short" });
+    return
   }
 
   // Check if user exists
   if (await User.findOne({ login: login })) {
-    valid = false;
+    res.status(409);
+    res.send({ message: "Login exists" });
+    return
+  }
+  if (await User.findOne({ mail: email })) {
+    res.status(409);
+    res.send({ message: "Email already registered" });
+    return;
   }
 
-  if (valid) {
-    const encoded_password = bcrypt.hashSync(unencoded_password, salt);
-    newUser = new User({
-      login: login,
-      password: encoded_password,
-      firstname: name,
-      team_member: false,
-      mail: email,
-    });
-    newUser.save();
-    res.send({ message: "OK", is_valid: valid, status: 200 });
-  }
-  else {
-    res.send({ message: "BAD REQUEST", is_valid: valid, status: 400 });
-  }
+  const encoded_password = bcrypt.hashSync(unencoded_password, salt);
+  newUser = new User({
+    login: login,
+    password: encoded_password,
+    firstname: name,
+    team_member: false,
+    mail: email,
+  });
+  newUser.save();
+  res.status(200)
+  res.send({ message: "OK" });
 });
 
 router.post("/login", async (req, res) => {
@@ -52,7 +60,7 @@ router.post("/login", async (req, res) => {
 
   if (!login || !password) {
     res.status(400);
-    res.send({ is_valid: false, status: 400, message: "BAD REQUEST" });
+    res.send({ message: "BAD REQUEST" });
     return;
   }
 
@@ -79,16 +87,15 @@ router.post("/login", async (req, res) => {
         status: 200,
       });
     } else {
-      status403(res);
+      res.status(403);
+      res.json({message:"Password invalid"})
     }
   } else {
-    status403(res);
+    res.status(404);
+    res.json({message:"User not found"})
   }
 });
 
-function status403(res) {
-  res.status(403);
-  res.send({ message: "Login error", status: 403 });
-}
+
 
 module.exports = router;

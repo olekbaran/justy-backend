@@ -10,7 +10,8 @@ Every request here must be of type POST.
 
 - 200 - Success
 - 400 - Data not provided
-- 403 - Unable to login (wrong login or password)
+- 403 - Unathorized no token provided or error with login (eg. wrong password)
+- 404 - Not found
 
 | Route | Props | NOTE |
 | :-----: | :----: | :----: |

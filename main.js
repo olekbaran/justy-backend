@@ -42,10 +42,10 @@ app.use((req, res, next) => {
   });
 });
 
-app.use("/avatar", express.static("avatars"));
+// app.use("/avatar", express.static("avatars"));
 app.use("/todos", todos);
 app.use("/auth", auth);
-app.use("/avatars", avatars);
+// app.use("/avatars", avatars);
 
 app.get("/", (req, res) => {
   let user;

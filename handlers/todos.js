@@ -17,11 +17,12 @@ router.use(async (req, res, next) => {
   next();
 });
 
+// Create
 router.post("/", async (req, res) => {
   let { title, description, endDate, category } = req.body;
   if (!title || !endDate) {
-    res.status(404);
-    res.send({ message: "Title and endDate are required", status: 404 });
+    res.status(400);
+    res.send({ message: "Title and endDate are required" });
     return;
   }
   let array = req.db_user.todos;
@@ -31,7 +32,7 @@ router.post("/", async (req, res) => {
   await req.db_user.updateOne({ todos: array });
 
   res.status(200);
-  res.send({ message: "OK", id: newTodo.id, status: 200 });
+  res.send({ message: "OK", id: newTodo.id });
 });
 
 router.post("/edit", async (req, res) => {
@@ -39,7 +40,7 @@ router.post("/edit", async (req, res) => {
 
   if (!item_id || typeof done != 'boolean' || typeof endDate != 'number') {
     res.status(400);
-    res.send({ message: "item_id is required or data types are invalid", status: 400 });
+    res.send({ message: "item_id is required or data types are invalid" });
     return;
   }
   let array = req.db_user.todos;
@@ -70,7 +71,7 @@ router.delete("/", async (req, res) => {
   let id = req.body.item_id;
   if (!id) {
     res.status(400);
-    res.send({ message: "item_id is required", status: 400 });
+    res.send({ message: "item_id is required" });
     return;
   }
 
