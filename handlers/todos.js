@@ -38,7 +38,7 @@ router.post("/", async (req, res) => {
 router.post("/edit", async (req, res) => {
   let { title, description, endDate, category, item_id, done } = req.body;
 
-  if (!item_id || typeof done != 'boolean' || typeof endDate != 'number') {
+  if (!item_id || (done && typeof done != 'boolean') || (endDate && typeof endDate != 'number')) {
     res.status(400);
     res.send({ message: "item_id is required or data types are invalid" });
     return;
