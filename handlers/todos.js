@@ -52,7 +52,7 @@ router.post("/edit", async (req, res) => {
       if (!description) description = previous.description;
       if (!endDate) endDate = previous.endDate;
       if (!category) category = previous.category;
-      if (!done) done = previous.done;
+      if (done == 'undefined') done = previous.done;
       array.splice(
         item,
         1,
